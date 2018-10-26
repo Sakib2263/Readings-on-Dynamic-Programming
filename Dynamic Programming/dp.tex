@@ -7,7 +7,7 @@
 \usepackage[sc,osf]{mathpazo}  
 \linespread{1.025}
 \usepackage{fancyvrb}
-\usepackage[a4paper,top=3cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=2cm]{geometry}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
@@ -18,6 +18,8 @@
 \usepackage{parskip}
 \usepackage{fancyhdr}
 \usepackage{vmargin}
+\usepackage{tabu}
+\author{Sakib Hasan}
 \setpapersize{A4}
 \setmarginsrb{25mm}{25mm}{25mm}{25mm}{0pt}{0mm}{0pt}{0mm}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
@@ -82,10 +84,8 @@
 	\end{minipage}\\[10mm]
 	
 \end{titlepage}
-
-  \pagenumbering{gobble}
   \newpage
-  \pagenumbering{roman}
+  %\pagenumbering{num_style}
   \section{What is Dynamic Programming?}
   Dynamic programming is an \textbf{optimization} approach that transforms a complex problem into a sequence of simpler problems; its essential characteristic is the multistage nature of the
   optimization procedure. More so than the optimization techniques described previously, dynamic programming provides a general framework for analyzing many problem types. Within this
@@ -115,7 +115,6 @@ Let us learn about some general concepts before diving in to dynamic programming
 \end{itemize}
 \end{itemize}
 Now, dynamic programming is an algorithmic strategy where we try to break the original problem into smaller similar sub-problems and try to find optimal solution in recursive manner which refers to optimization. DP is based on remembering past results, so we also have to store already calculated data from smaller sub-problems solution. DP is generally used to solve \textbf{'Optimization Problems'}.
-\newline 
 
 \subsection{Approach -}
 \begin{enumerate}[label=(\roman*)]
@@ -152,7 +151,7 @@ On the other hand, the Longest Path problem doesn’t have the Optimal Substruct
 \end{figure}
 \vspace{6mm}
 \textbf{Overlapping sub-problems} :
-\par{\indent Like Divide and Conquer, Dynamic Programming combines solutions to sub-problems. Dynamic Programming is mainly used when solutions of same subproblems are needed again and again. In dynamic programming, computed solutions to subproblems are stored in a table so that these don’t have to be recomputed. So Dynamic Programming is not useful when there are no common (overlapping) subproblems because there is no point storing the solutions if they are not needed again. For example, Binary Search doesn’t have common subproblems. If we take an example of following recursive program for Fibonacci Numbers, there are many subproblems which are solved again and again.
+\par{\indent Like Divide and Conquer, Dynamic Programming combines solutions to sub-problems. Dynamic Programming is mainly used when solutions of same subproblems are needed again and again. In dynamic programming, computed solutions to subproblems are stored in a table so that these don’t have to be recomputed. So Dynamic Programming is not useful when there are no common (overlapping) subproblems because there is no point storing the solutions if they are not needed again. For example, Binary Search doesn’t have common subproblems. If we take an example of following recursive program for Fibonacci Numbers, there are many subproblems which are solved again and again. [ i.e: Detailed discussion for fibonacchi problem solve in DP will be in section 2.1]
 \newline
 \begin{lstlisting}
 /* simple recursive program for Fibonacci numbers */
@@ -242,5 +241,378 @@ Advanced problems -
 \item BitMasking
 \item Digit DP
 \end{enumerate} and so on. Here, we will be discussing about Tiling problem first.
+
+\subsection{Overview on Dynamic programming solving Fibonacci number problem}
+The Fibonacci numbers are the numbers in the following integer sequence.\newline
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 141, ... ... ... \newline
+In mathematical terms, the sequence Fn of Fibonacci numbers is defined by the recurrence relation.
+\[ F_n =  F_{n-1} + F_{n+2} \]
+with seed values
+$ F_0 = 0$  and  $ F_1 = 1 $
+Write a function int \textbf{fib(int n)} that returns $F_n$ . For example, if n = 0, then fib() should return 0. If n = 1, then it should return 1. For n > 1, it should return $F_{n-1} + F_{n+2} $.
+\newline
+Following are different methods to get the nth Fibonacci number\vspace{6mm}
+\newline
+\textbf{Method 1 ( Use recursion )}
+\vspace{3mm}
+\newline
+A simple method that is a direct recusrive implementation mathematical recurance relation given above.
+\vspace{3mm}
+\begin{lstlisting}
+#include<stdio.h>
+int fib(int n){
+if (n <= 1) return n;
+return fib(n-1) + fib(n-2);  // recursive call of fib(n) here 
+}
+int main (){
+int n;
+
+/* Scan n as nth number */
+ print(fib(n))  // returns the value from recursive function
+
+return 0;
+}
+\end{lstlisting}
+
+Time Complexity: T(n) = T(n-1) + T(n-2) which is exponential. \newline
+We can observe that this implementation does a lot of repeated work (see the recursion tree from Fig:2 on page 3). So this is a bad implementation for nth Fibonacci number.\newline
+Extra Space: O(n) if we consider the fuinction call stack size, otherwise O(1).
+\vspace{6mm}
+\newline
+\textbf{Method 2 ( Use Dynamic Programming )}
+\vspace{3mm}
+\newline
+We can avoid the repeated work done is the method 1 by storing the Fibonacci numbers
+calculated so far.
+\begin{lstlisting}
+
+int fib(int n){
+/* Declare an array to store fibonacci numbers. */
+int f[n+1];
+int i;
+
+
+/* 0th and 1st number of the series are 0 and 1*/
+f[0] = 0;
+f[1] = 1;
+for (i = 2; i <= n; i++){
+/* Add the previous 2 numbers in the series and store it */
+f[i] = f[i-1] + f[i-2];
+}
+return f[n];
+}
+int main (){
+int n ;
+print( fib(n))
+return 0;
+}
+\end{lstlisting}
+Time Complexity: O(n)\newline
+Extra Space: O(n)
+\vspace{6mm}
+\newline
+\textbf{Method 3 ( Space Otimized Method 2 )}
+\vspace{3mm}
+\newline
+We can optimize the space used in method 2 by storing the previous two numbers only
+because that is all we need to get the next Fibannaci number in series.
+\vspace{3mm}
+\begin{lstlisting}
+/* Optimized version function of method 2*/
+int fib(int n){
+int a = 0, b = 1, c, i;
+if( n == 0)
+return a;
+for (i = 2; i <= n; i++){
+c = a + b;
+a = b;
+b = c;
+}
+return b;
+}
+
+int main (){
+int n;
+/* scan n*/
+/*printf(fib(n))*/
+getchar();
+return 0;
+}
+\end{lstlisting}
+Time Complexity: O(n)\newline
+Extra Space: O(1)
+\newline
+This problem can also be solved in  O(logN) complexity using optimized Matrix method and 
+
+\section{Tiling Problem}
+\vspace{6mm}
+
+In tiling problem, the problem states that,\newline
+Given a 2*N board where  N is any integer value, how many ways can you fill it up with given constant size tiles? 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.25\textwidth]{tile_2xn.png}
+\end{figure}
+Available tiles 2x1 or 2x2.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.25\textwidth]{2x1_2x2.png}
+\end{figure}
+Now when n = 3 there are 5 possible ways to fill up the board with given tiles. 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{n3_5.png}
+\end{figure}
+consider board of width n:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{fn.png}
+\end{figure}
+So, possible ways to fill the rightmost column :\newline
+1. By one 2×1 vertically.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{f1_2x1.png}
+\end{figure}
+2. By two of 2×1 horizontally.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{f2_2x1.png}
+\end{figure}
+3. By one 2×2 either horizontally or vertically( since both are same).
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{f1_2x2.png}
+\end{figure}
+ Let f(n) be the number of ways of filling a board of size 2×n.
+\newline
+So,  f(n) = f(n-1) + f(n-2) + f(n-2)
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{f1_ways.png}
+\includegraphics[width=0.5\textwidth]{fn_2ways.png}
+\end{figure}
+ Now, let's determine the base cases.\newline
+\textbf{1.}   f(0) = 1, because if we have to find f(1) then , f(1) = f(0) + f(-1) + f(-1) , since f(-1) not exist, so  f(-1) = 0 then f(1) = f(0) + 0 + 0 => f(1) = f(0) 
+since there is one way to fill the board of size 2×1 by using one 2×1 tile. It means that f(0) must 
+be equal to 1.
+\newline
+\textbf{2.}   f(1) = 1
+\vspace{6mm}
+\newline
+\textbf{Algorithm/Code: }
+\begin{lstlisting}
+int ways[x];
+
+int filling_tiles(int n){
+	if(ways[n] != -1) return ways[n];
+	return (ways[n] = f(n-1) + 2*f(n-2));
+}
+
+
+int main(){
+	ways[0];
+	ways[1];
+	for(int i =2; i < x ; i++) ways[i] = -1;
+//cout << f(x) ;
+return f(x)
+\end{lstlisting}
+\textbf{Complexity:} O(n) \vspace{3mm}
+\newline
+\textbf{Another problem:} \vspace{3mm}\newline  Suppose this time N = 3 and a tile can be either placed horizontally 1x2 or vertically, 2x1.\newline
+For instance,  below is a  board A. How many ways can it be  filled up using tile B(2x1 or 1x2 both are same just rotated)?
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.3\textwidth]{3.png}
+\caption {Board A - 2x3}
+\end{figure}
+Here N= 3 , so the board in 2x3.
+and given tile(s) is 2x1 or 1x2
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.20\textwidth]{1x2.png}
+\caption{tile B - 1x2}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.10\textwidth]{2x1.png}
+\caption{tile B - 2x1}
+\end{figure}
+2x1 tiles can be placed vertically or horizontally into 2xN tiles. You can place the tiles B on A by the following combinations.
+\begin{itemize}
+\item All of (2x1) tiles Horizontally
+\item (1x2) - Twice vertically and (2x1) -  once horizontally
+\item (2x1) -  Twice horizontally and (1x2) - once vertically
+\end{itemize}
+That’s all the combination possible for three tiles. \vspace{2mm}\newline  
+\textbf{What if N was 1?}\newline
+The 2x1- board would be as follows: 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.10\textwidth]{2x1B.png}
+\end{figure}
+And to overlap all of it, tile-B could be used vertically once only. So, for N = 1 , answer would be one.\newline
+\textbf{What if N was 2?}\newline Then the figure(2x2) would be,
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.25\textwidth]{2x2.png}
+\end{figure}
+The following possible ways to fill up figure(2x2) using tiles(2x1) are :\newline
+--Twice Horizontally\newline
+--Twice Vertically\newline
+Apart from these two combination, there aren’t any other options. So, for N’s value 2, 2 combinations are possible. 
+Because, so far we are getting linear values, the case still remains ambiguous on whether we would always get linear value answers.\newline Now, let’s see the combinations for N’s value 4.
+\begin{itemize}
+\item All tiles piled horizontally
+\item All tiles piled vertically
+\item Two horizontally and two vertically
+\item Two vertically and two horizontally.
+\item First and last horizontally and middle two vertically
+\end{itemize}
+Those are all the combinations possible for N’s value 4. Notice for 4, the value is 5. If nicely presented, the data would look like below :
+\begin{center}
+\begin{tabu} to 0.8\textwidth { | X[2] | X[.8] | X[.8] | X[.8]|X[.8]|}
+ \hline
+ N&1&2&3&4\\
+ \hline
+ Number of Ways&1&2&3&5  \\
+\hline
+\end{tabu}
+\end{center}
+So, as more tiles added, combinations won’t increase linearly. But it seems for N’s value 3, answer could be achieved by adding previous two data together. And same case follows for N’s value 4. We could achieve 5’s combination using previous two values. 
+\newline
+For this problem, we have base case 1 and 2 for which we could get combination of 1 and 2 respectively. And a function of N can be formed by following way:
+\newline
+\begin{center}
+N(n) = N(n-1) + N(n-2)
+\end{center}
+Here n is the integer describe 2*n tiles. And n’s data lies in data of n-1 and n-2.
+\newline
+Algorithm/Pseudo code is provided below: 
+\newline
+Variables : \newline
+n : n is the integer which describes how far horizontally our input explores. 2*n.\newline
+Dp[i] : for any integer number i,\vspace{3mm}\newline Here, Dp[i] stores the value of ith integer combination of way tiling input \vspace{3mm}
+\newline
+Code: \vspace{3mm}
+\begin{lstlisting}
+Filling-Tiles (n)
+{
+    if(n is 1)
+return 1; //base case one
+    If (n is 2)
+   	 return 2; // base case 2
+   if (n is 3)
+	return 3; //base case 3
+else {
+
+  	  Filling-Tiles (n) = Filling-Tiles (n-1) +   Filling-Tiles (n-2);
+  	  //This recursively calls for the value of n-1 and n-2 and sends the summation as answer;
+         }
+}
+\end{lstlisting}
+Time Complexity: O(n)
+\newline
+Memory Complexity: O(n)
+\newline
+\vspace{6mm}
+\section{Flag/Coloring Problem}
+Coloring flag is a common dynamic programming problem for beginners.
+It can be solved using basic math too  but for beginners DP (short for dynamic programming) learners, it’s better to avoid math in this case.\vspace{2mm}
+\newline
+The problem statement is as follows below:\vspace{3mm} \newline
+Given three colors, white, red and blue, how many way can you fill up a  sequence, provided the length of the sequence? Also, you can’t have any 2 same colors in adjacent cells. As in, the tiles may not be Red and Red, or White and White. It has to be Red and White or White and Red. Also to make the task more difficult, you may put \textbf{Blue} only between\textbf{ Red} and \textbf{White} or White and Red. The length of the sequence of to be colored will be provided in integer number n.\vspace{3mm}
+\newline
+For instance, if N is 1, then how many ways can you fill up the one cell? 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.50\textwidth]{row.png}
+\end{figure}
+Possible answer is red or white. So for N equals to 1, the answer is 2.\vspace{9mm}\newline
+\textbf{What if N is 2?}\vspace{3mm}\newline 
+We can either choose Red and White combination or choose White and Red combination.
+\begin{figure}[H]
+\minipage{0.45\textwidth}
+\includegraphics[width=\linewidth]{rw.png}
+\caption{Red and White combination}
+\endminipage\hfill
+\minipage{0.45\textwidth}%
+\includegraphics[width=\linewidth]{wr.png}
+\caption{White and Red combination}
+\endminipage
+\end{figure}
+The primary step of solving a problem using  DP is understanding what the problem is about and what it’s asking. Then figuring out what could be the base cases, or constant cases. And these cases could be set as default cases. These cases could be used to solve for any test case may be given. For this particular problem,  for N = 1, answer will be 2 and for N = 2 answer will be 2. The two best cases which could potentially help further figure out a solution.\vspace{8mm} 
+\newline
+Now,\textbf{ what would be the result if N was 3?}\vspace{3mm}\newline
+For sequence of 3 cells, blue must be used between Red and White or White and Red color. So, that’s already two of the possible combinations we could have. But getting a combination of Red and White or White and Red is acceptable too where two flags/blocks of the same color are not adjacent. So, Red-Red-white or white-white-red is not acceptable. \vspace{3mm}
+\newline
+So, below are the possible combinations we should come up with for N’s value 3.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.40\textwidth]{rbw.png}
+\vspace{3mm}
+
+\includegraphics[width=0.40\textwidth]{wbr.png}
+\vspace{3mm}
+
+\includegraphics[width=0.40\textwidth]{rwr.png}
+\vspace{3mm}
+
+\includegraphics[width=0.40\textwidth]{wrw.png}
+\end{figure}
+We figuared the combinations out above manually. Now, to demonstrate why base cases are important, let’s further explore what combinations we could form for N’s value 4.\vspace{3mm}\newline
+ The possible combination for a sequence of four cells should be like following:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.50\textwidth]{n4wrb.png}
+\caption{All possible combination for N = 4}
+\end{figure}
+Now, if we check the table of the results for different values of n, we see -
+\begin{center}
+\begin{tabu} to 1.0\textwidth { | X[2.8] | X[.8] | X[.8] | X[.8]|X[.8]|}
+ \hline
+ N&1&2&3&4\\
+ \hline
+ Possible no. of combinations&1&2&4&6 \\
+\hline
+\end{tabu}
+\end{center}
+\vspace{6mm}
+Dynamic programming is very important to programmers because it saves time and memory. Data can be stored to use later. Previously stored data can be used to find new data. For instance, for the two bases above, 1 and 2, answers are 2 and 2 respectively.  For N’s value 3, answer is 4. Which, as manually demonstrated, was 4 but it  can  also be achieved by adding previous two answers. The answer found for 4 manually was 6. You could add previous two values, 4 and 2 to get the value for 4.\vspace{8mm}\newline
+So, it can be deducted that, for this particular problem we can have the formula below:
+\[N (4) = N(3) + N(2)\]
+\[N (3) = N(3) + N(2)\]
+\[...\]
+\[...\]
+Let’s call this a function of N. For $n^{th}$ value of N,  solve for function N(n) where 
+\[N(n) = N (n-1)+ N(n-2)\] 
+\newline
+Dynamic programming is a very important part of Algorithm 1 course. And most programmers prefer this method if given the choice.  You can solve these type of problems using recursion or loop. But it is better to use recursion. \vspace{3mm}
+\newline
+Pseudo code is provided below:\vspace{8mm} \newline
+Variables :\newline
+n : nth sequence for which, find number of combinations\newline
+dp[i] : for any integer number i, dp[i] stores the combination which could be used to color i cells.\newline
+ 
+\textbf{Code:}
+\begin{lstlisting}
+Flag-Color(n)
+{
+    if(n is 1 or n is 2)
+    return 2;
+      // this is the base case
+Else {
+
+  	  Flag-Color (n) = Flag-Color(n-1) +   Flag-Color(n-2);
+  	  //This recursively calls for the value of n-1 and n-2 and sends the summation as answer;
+         }
+}
+\end{lstlisting}
+
+Time Complexity: O(n)
+\newline
+Memory Complexity: O(n)
+\newline
+
 
 \end{document}
